@@ -1,4 +1,5 @@
 import random
+import time
 
 from actors import Wizard, Creature
 
@@ -33,12 +34,23 @@ def game_loop():
 
         if cmd == 'a':
             print('attack')
+            if hero.attack(active_creature):
+                creatures.remove(active_creature)
+            else:
+                print('Wizard was defeated and must take time to recover')
+                time.sleep(5)
         elif cmd == 'l':
-            print('look around')
+            print('The wizard {} takes a look around and sees...'.format(hero.name))
+            for creature in creatures:
+                print(creature)
         elif cmd == 'r':
             print('run')
         else:
             print('K, exiting')
+            break
+
+        if not creatures:
+            print('You defeated all the creatures!')
             break
 
 def main():

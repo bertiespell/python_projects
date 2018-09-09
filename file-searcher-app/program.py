@@ -61,19 +61,14 @@ def search_file(item, text):
 
 def search_folders(folder, text):
     print('Would search {} for {}'.format(folder, text))
-    all_matches = []
     items = os.listdir(folder)
     glob.glob(os.path.join(folder, '*'))
     for item in items:
         full_item = os.path.join(folder, item)
         if os.path.isdir(full_item):
-            matches = (full_item, text)
-            all_matches.extend(matches)
+            yield from search_folders(full_item, text)
         else:
-            matches = search_file(full_item, text)
-            all_matches.extend(matches)
-
-    return all_matches
+            yield from search_file(full_item, text)
 
 
 if __name__ == '__main__':

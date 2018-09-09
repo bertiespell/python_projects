@@ -4,7 +4,7 @@ import shutil
 import requests
 
 def get_data_from_url(url):
-    response = requests.get(url)
+    response = requests.get(url, stream=True)
     return response.raw
 
 

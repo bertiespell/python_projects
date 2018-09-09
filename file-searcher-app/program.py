@@ -19,7 +19,11 @@ def main():
 
     matches = search_folders(folder, text)
     for m in matches:
-        print(m)
+        print('--------MATCH--------')
+        print('file: ' + m.file)
+        print('line: {}'.format(m.line))
+        print('match: ' + m.text.strip())
+        print()
 
 
 def print_header():
@@ -45,18 +49,14 @@ def get_search_text_from_user():
 
 
 def search_file(item, text):
-    matches = []
     with open(item, 'r', encoding='utf-8') as fin:
-
         line_num = 0
         for line in fin:
             line_num += 1
             print(line)
             if line.lower().find(text) >= 0:
                 m = SearchResult(file=item, line=line_num, text=line)
-                matches.extend(m)
-
-    return matches
+                yield m
 
 
 def search_folders(folder, text):
@@ -67,10 +67,11 @@ def search_folders(folder, text):
     for item in items:
         full_item = os.path.join(folder, item)
         if os.path.isdir(full_item):
-            continue
-
-        matches = search_file(full_item, text)
-        all_matches.extend(matches)
+            matches = (full_item, text)
+            all_matches.extend(matches)
+        else:
+            matches = search_file(full_item, text)
+            all_matches.extend(matches)
 
     return all_matches
 
